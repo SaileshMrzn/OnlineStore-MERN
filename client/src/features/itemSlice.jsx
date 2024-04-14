@@ -17,8 +17,42 @@ export const fetchAsyncItemDetail = createAsyncThunk(
   }
 );
 
+// export const fetchDatabase = createAsyncThunk(
+//   "items/fetchDatabase",
+//   async () => {
+//     const res = await axios.get(`http://localhost:5555/product`);
+//     return res.data;
+//   }
+// );
+
+export const addCartItemsAndPostData = (item) => {
+  return (dispatch, getState) => {
+    dispatch(addCartItems(item));
+    dispatch(getCartTotal());
+
+    const { totalQuantity, totalPrice } = getState().items; // Replace 'yourReducer' with the name of your reducer
+
+    const updatedData = {
+      prod_id: item.id,
+      title: item.title,
+      totalQuantity: totalQuantity, // Replace with your actual quantity
+      totalPrice: totalPrice, // Replace with your actual price
+    };
+
+    axios
+      .post("http://localhost:5555/product", updatedData)
+      .then((response) => {
+        console.log("Data posted successfully:", response.data);
+      })
+      .catch((error) => {
+        console.log("Error posting data:", error);
+      });
+  };
+};
+
 const initialState = {
   items: [],
+  database: [],
   itemDetails: [],
   cartItems: [],
   filteredItems: [],
@@ -105,6 +139,9 @@ const itemSlice = createSlice({
         state.itemDetails.push(payload);
         state.loader = false;
       })
+      // .addCase(addCartItemsAndPostData.fulfilled, (state, { payload }) => {
+      //   state.totalQuantity += 1;
+      // })
       .addCase(fetchAsyncItems.rejected, () => {
         console.log("rejected");
       });

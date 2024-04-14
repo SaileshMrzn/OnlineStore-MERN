@@ -9,17 +9,28 @@ import {
   removeCartItem,
 } from "../features/itemSlice";
 import { AiOutlineDelete } from "react-icons/ai";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function CartItems() {
   const theme = useSelector(getThemeState);
   const cartItems = useSelector(getCartItems);
-  const { totalPrice, totalQuantity } = useSelector((state) => state.items);
+  const { totalPrice, totalQuantity, database } = useSelector(
+    (state) => state.items
+  );
 
-  const dispatch = useDispatch();
+  // // const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getCartTotal());
-  }, [cartItems]);
+  // // const { id2 } = useParams();
+
+  // // useEffect(() => {
+  // //   dispatch(getCartTotal());
+  // // }, [cartItems]);
+
+  // // useEffect(() => {
+  // //   dispatch(fetchDatabase());
+  // // }, []);
+  // // console.log(database[0]);
 
   const textBold = theme === false ? "text-gray-900" : "text-gray-100";
   const background = theme === false ? "" : "bg-slate-900";
@@ -50,6 +61,8 @@ function CartItems() {
                   <tbody>
                     {cartItems.length !== 0 ? (
                       cartItems.map((item) => (
+                        // database.length !== 0 ? (
+                        //   database[0].data.map((item) => (
                         <tr>
                           <td class="py-4 max-w-sm">
                             <div class="flex items-center pr-5">

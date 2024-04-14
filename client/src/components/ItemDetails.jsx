@@ -1,5 +1,5 @@
 // ItemDetails.js
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../style.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,15 +11,26 @@ import {
   getThemeState,
   addCartItems,
   getCartTotal,
+  incrementQuantity,
+  decrementQuantity,
+  addCartItemsAndPostData,
 } from "../features/itemSlice";
+import axios from "axios";
 
 export default function ItemDetails() {
   const { id } = useParams();
   const details = useSelector(getAllDetails);
   const loader = useSelector(getLoaderState);
   const theme = useSelector(getThemeState);
+  const { totalPrice, totalQuantity, cartItems } = useSelector(
+    (state) => state.items
+  );
+
+  const [dataToSend, setDataToSend] = useState(null);
 
   const dispatch = useDispatch();
+
+  console.log(details);
 
   useEffect(() => {
     dispatch(fetchAsyncItemDetail(id));
@@ -28,10 +39,35 @@ export default function ItemDetails() {
     };
   }, [id]);
 
+  // const addToCart = () => {
+  //   dispatch(addCartItems(details[0]));
+  //   dispatch(getCartTotal());
+  //   alert("added to cart");
+
+  //   console.log(cartItems);
+
+  //   if (cartItems[0]) {
+  //     const updatedData = {
+  //       prod_id: id,
+  //       title: cartItems[0].title,
+  //       totalQuantity: totalQuantity,
+  //       totalPrice: totalPrice,
+  //     };
+
+  //     axios
+  //       .post("http://localhost:5555/product", updatedData)
+  //       .then((response) => {
+  //         console.log("Data posted successfully:", response.data);
+  //       })
+  //       .catch((error) => {
+  //         console.log("Error posting data:", error);
+  //       });
+  //   }
+  // };
+
   const addToCart = () => {
+    dispatch(addCartItemsAndPostData(details[0]));
     alert("added to cart");
-    dispatch(addCartItems(...details));
-    dispatch(getCartTotal());
   };
 
   const textRegular = theme === false ? "text-gray-500" : "text-gray-300";
