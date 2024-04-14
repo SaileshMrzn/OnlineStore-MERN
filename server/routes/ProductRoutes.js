@@ -14,6 +14,7 @@ router.post("/", async (request, response) => {
       title: request.body.title,
       totalQuantity: request.body.totalQuantity,
       totalPrice: request.body.totalPrice,
+      image: request.body.image,
     };
 
     const product = await Product.create(newProduct);

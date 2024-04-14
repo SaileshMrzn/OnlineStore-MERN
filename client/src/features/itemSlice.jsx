@@ -37,6 +37,7 @@ export const addCartItemsAndPostData = (item) => {
       title: item.title,
       totalQuantity: totalQuantity, // Replace with your actual quantity
       totalPrice: totalPrice, // Replace with your actual price
+      image: item.image,
     };
 
     axios
