@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { addCartItems, getCartTotal } from "../features/itemSlice";
 
 export const fetchDatabase = createAsyncThunk(
   "items/fetchDatabase",
@@ -58,20 +59,6 @@ const dbSlice = createSlice({
     removeFlag: (state) => {
       state.flag = 0;
     },
-    getCartTotal: (state) => {
-      const { totalPrice, totalQuantity } = state.cartItems.reduce(
-        (total, item) => {
-          const { price, quantity } = item;
-          const itemTotal = price * quantity;
-          total.totalPrice += itemTotal;
-          total.totalQuantity += quantity;
-          return total;
-        },
-        { totalPrice: 0, totalQuantity: 0 }
-      );
-      state.totalPrice = parseFloat(totalPrice).toFixed(2);
-      state.totalQuantity = totalQuantity;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -86,4 +73,4 @@ const dbSlice = createSlice({
 });
 
 export default dbSlice.reducer;
-export const { getCartTotal, removeFlag } = dbSlice.actions;
+export const { removeFlag } = dbSlice.actions;
