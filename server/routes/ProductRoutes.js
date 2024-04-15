@@ -12,6 +12,7 @@ router.post("/", async (request, response) => {
     const newProduct = {
       prod_id: request.body.prod_id,
       title: request.body.title,
+      price: request.body.price,
       totalQuantity: request.body.totalQuantity,
       totalPrice: request.body.totalPrice,
       image: request.body.image,
@@ -51,11 +52,11 @@ router.get("/:id2", async (request, response) => {
   }
 });
 
-router.delete("/:id2", async (request, response) => {
+router.delete("/:id", async (request, response) => {
   try {
-    const { id2 } = request.params;
+    const { id } = request.params;
 
-    const result = await Product.findByIdAndDelete(id2);
+    const result = await Product.findByIdAndDelete(id);
 
     if (!result) {
       return response.status(404).json({ message: "Product not found" });

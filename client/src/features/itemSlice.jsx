@@ -17,13 +17,20 @@ export const fetchAsyncItemDetail = createAsyncThunk(
   }
 );
 
-// export const fetchDatabase = createAsyncThunk(
-//   "items/fetchDatabase",
-//   async () => {
-//     const res = await axios.get(`http://localhost:5555/product`);
-//     return res.data;
-//   }
-// );
+export const fetchDatabase = createAsyncThunk(
+  "items/fetchDatabase",
+  async () => {
+    const res = await axios.get(`http://localhost:5555/product`);
+    return res.data;
+  }
+);
+export const deleteFromDatabase = createAsyncThunk(
+  "items/deleteFromDatabase",
+  async (id) => {
+    const res = await axios.delete(`http://localhost:5555/product/${id}`);
+    return res.data;
+  }
+);
 
 export const addCartItemsAndPostData = (item) => {
   return (dispatch, getState) => {
@@ -35,6 +42,7 @@ export const addCartItemsAndPostData = (item) => {
     const updatedData = {
       prod_id: item.id,
       title: item.title,
+      price: item.price,
       totalQuantity: totalQuantity, // Replace with your actual quantity
       totalPrice: totalPrice, // Replace with your actual price
       image: item.image,
@@ -61,6 +69,7 @@ const initialState = {
   dark: false,
   totalPrice: 0,
   totalQuantity: 0,
+  flag: 0,
 };
 
 const itemSlice = createSlice({
@@ -69,6 +78,9 @@ const itemSlice = createSlice({
   reducers: {
     removeItemDetail: (state) => {
       state.itemDetails = [];
+    },
+    removeFlag: (state) => {
+      state.flag = 0;
     },
     setFilteredItems(state, { payload }) {
       state.filteredItems = payload;
@@ -140,9 +152,13 @@ const itemSlice = createSlice({
         state.itemDetails.push(payload);
         state.loader = false;
       })
-      // .addCase(addCartItemsAndPostData.fulfilled, (state, { payload }) => {
-      //   state.totalQuantity += 1;
-      // })
+      .addCase(fetchDatabase.fulfilled, (state, { payload }) => {
+        state.database = [];
+        state.database.push(payload);
+      })
+      .addCase(deleteFromDatabase.fulfilled, (state) => {
+        state.flag += 1;
+      })
       .addCase(fetchAsyncItems.rejected, () => {
         console.log("rejected");
       });
@@ -165,6 +181,7 @@ export const {
   incrementQuantity,
   decrementQuantity,
   removeCartItem,
+  removeFlag,
 } = itemSlice.actions;
 
 // Todo: separate slice for cartItems.

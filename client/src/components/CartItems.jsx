@@ -7,6 +7,9 @@ import {
   incrementQuantity,
   decrementQuantity,
   removeCartItem,
+  fetchDatabase,
+  deleteFromDatabase,
+  removeFlag,
 } from "../features/itemSlice";
 import { AiOutlineDelete } from "react-icons/ai";
 import axios from "axios";
@@ -15,22 +18,20 @@ import { useParams } from "react-router-dom";
 function CartItems() {
   const theme = useSelector(getThemeState);
   const cartItems = useSelector(getCartItems);
-  const { totalPrice, totalQuantity, database } = useSelector(
+  const { totalPrice, totalQuantity, database, items, flag } = useSelector(
     (state) => state.items
   );
 
-  // // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // // const { id2 } = useParams();
+  useEffect(() => {
+    dispatch(fetchDatabase());
+    return () => {
+      dispatch(removeFlag());
+    };
+  }, [flag]);
 
-  // // useEffect(() => {
-  // //   dispatch(getCartTotal());
-  // // }, [cartItems]);
-
-  // // useEffect(() => {
-  // //   dispatch(fetchDatabase());
-  // // }, []);
-  // // console.log(database[0]);
+  console.log(flag);
 
   const textBold = theme === false ? "text-gray-900" : "text-gray-100";
   const background = theme === false ? "" : "bg-slate-900";
@@ -59,64 +60,69 @@ function CartItems() {
                     </tr>
                   </thead>
                   <tbody>
-                    {cartItems.length !== 0 ? (
-                      cartItems.map((item) => (
-                        // database.length !== 0 ? (
-                        //   database[0].data.map((item) => (
-                        <tr>
-                          <td class="py-4 max-w-sm">
-                            <div class="flex items-center pr-5">
-                              <img
-                                class="h-16 w-16 mr-4"
-                                src={item.image}
-                                alt="Product image"
+                    {
+                      // cartItems.length !== 0 ? (
+                      //   cartItems.map((item) => (
+                      database.length !== 0 ? (
+                        database[0].data.map((item) => (
+                          <tr>
+                            <td class="py-4 max-w-sm">
+                              <div class="flex items-center pr-5">
+                                <img
+                                  class="h-16 w-16 mr-4"
+                                  src={item.image}
+                                  alt="Product image"
+                                />
+                                <span class="font-semibold">{item.title}</span>
+                              </div>
+                            </td>
+                            <td class="py-4">${item.price}</td>
+                            <td class="py-4">
+                              <div class="flex items-center">
+                                <button
+                                  class={`border-${border} border rounded-md py-2 px-4 mr-2`}
+                                  onClick={() => {
+                                    item.totalQuantity > 1
+                                      ? dispatch(decrementQuantity(item))
+                                      : alert("Quantity cannot be less than 1");
+                                  }}
+                                >
+                                  -
+                                </button>
+                                <span class="text-center w-8">
+                                  {item.totalQuantity}
+                                </span>
+                                <button
+                                  class={`border border-${border} rounded-md py-2 px-4 ml-2`}
+                                  onClick={() => {
+                                    dispatch(incrementQuantity(item));
+                                  }}
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </td>
+                            <td class="py-4">
+                              $
+                              {parseFloat(
+                                item.price * item.totalQuantity
+                              ).toFixed(2)}
+                            </td>
+                            <td className="">
+                              <AiOutlineDelete
+                                style={{ color: "#f4244a" }}
+                                onClick={() => {
+                                  dispatch(deleteFromDatabase(item._id));
+                                }}
+                                className="cursor-pointer"
                               />
-                              <span class="font-semibold">{item.title}</span>
-                            </div>
-                          </td>
-                          <td class="py-4">${item.price}</td>
-                          <td class="py-4">
-                            <div class="flex items-center">
-                              <button
-                                class={`border-${border} border rounded-md py-2 px-4 mr-2`}
-                                onClick={() => {
-                                  item.quantity > 1
-                                    ? dispatch(decrementQuantity(item))
-                                    : alert("Quantity cannot be less than 1");
-                                }}
-                              >
-                                -
-                              </button>
-                              <span class="text-center w-8">
-                                {item.quantity}
-                              </span>
-                              <button
-                                class={`border border-${border} rounded-md py-2 px-4 ml-2`}
-                                onClick={() => {
-                                  dispatch(incrementQuantity(item));
-                                }}
-                              >
-                                +
-                              </button>
-                            </div>
-                          </td>
-                          <td class="py-4">
-                            ${parseFloat(item.price * item.quantity).toFixed(2)}
-                          </td>
-                          <td className="">
-                            <AiOutlineDelete
-                              style={{ color: "#f4244a" }}
-                              onClick={() => {
-                                dispatch(removeCartItem(item));
-                              }}
-                              className="cursor-pointer"
-                            />
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <td className="py-4">No any items</td>
-                    )}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <td className="py-4">No any items</td>
+                      )
+                    }
                   </tbody>
                 </table>
               </div>

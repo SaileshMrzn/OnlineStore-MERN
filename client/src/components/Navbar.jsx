@@ -8,6 +8,7 @@ import {
   getThemeState,
   setFilteredItems,
   setThemeState,
+  fetchDatabase,
 } from "../features/itemSlice";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { BsCart2 } from "react-icons/bs";
@@ -16,7 +17,12 @@ export default function Navbar() {
   const dispatch = useDispatch();
   const [term, setTerm] = useState("");
   const items = useSelector(getAllItems);
-  const { totalQuantity } = useSelector((state) => state.items);
+  // const database = useSelector(fetchDatabase());
+  const { totalQuantity, database } = useSelector((state) => state.items);
+
+  useEffect(() => {
+    dispatch(fetchDatabase());
+  }, [totalQuantity]);
 
   const handleSearch = (e) => {
     const filteredItems = items.filter((item) =>
@@ -42,6 +48,8 @@ export default function Navbar() {
       ? dispatch(setThemeState(true))
       : dispatch(setThemeState(false));
   }, [theme]);
+
+  // console.log(database);
 
   return (
     <>
@@ -71,7 +79,7 @@ export default function Navbar() {
                   <div
                     className={`bg-pink-400 rounded-[50%] absolute px-1 -top-2 -right-2 border-2 text-xs text-white`}
                   >
-                    {totalQuantity}
+                    {database && database[0] ? database[0].count : 0}
                   </div>
                 </Link>
               </div>
