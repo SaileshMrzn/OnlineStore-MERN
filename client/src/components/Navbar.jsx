@@ -8,8 +8,8 @@ import {
   getThemeState,
   setFilteredItems,
   setThemeState,
-  fetchDatabase,
 } from "../features/itemSlice";
+import { fetchDatabase } from "../features/dbSlice";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { BsCart2 } from "react-icons/bs";
 
@@ -18,7 +18,8 @@ export default function Navbar() {
   const [term, setTerm] = useState("");
   const items = useSelector(getAllItems);
   // const database = useSelector(fetchDatabase());
-  const { totalQuantity, database } = useSelector((state) => state.items);
+  const { totalQuantity } = useSelector((state) => state.items);
+  const { database } = useSelector((state) => state.db);
 
   useEffect(() => {
     dispatch(fetchDatabase());

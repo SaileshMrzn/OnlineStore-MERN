@@ -7,10 +7,13 @@ import {
   incrementQuantity,
   decrementQuantity,
   removeCartItem,
-  fetchDatabase,
-  deleteFromDatabase,
-  removeFlag,
 } from "../features/itemSlice";
+import {
+  fetchDatabase,
+  removeFlag,
+  deleteFromDatabase,
+} from "../features/dbSlice";
+
 import { AiOutlineDelete } from "react-icons/ai";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -18,9 +21,8 @@ import { useParams } from "react-router-dom";
 function CartItems() {
   const theme = useSelector(getThemeState);
   const cartItems = useSelector(getCartItems);
-  const { totalPrice, totalQuantity, database, items, flag } = useSelector(
-    (state) => state.items
-  );
+  const { totalPrice, totalQuantity } = useSelector((state) => state.items);
+  const { database, flag } = useSelector((state) => state.db);
 
   const dispatch = useDispatch();
 
@@ -31,7 +33,7 @@ function CartItems() {
     };
   }, [flag]);
 
-  console.log(flag);
+  console.log(database);
 
   const textBold = theme === false ? "text-gray-900" : "text-gray-100";
   const background = theme === false ? "" : "bg-slate-900";

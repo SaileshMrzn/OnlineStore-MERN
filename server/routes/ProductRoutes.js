@@ -71,17 +71,17 @@ router.delete("/:id", async (request, response) => {
   }
 });
 
-router.put("/:id2", async (request, response) => {
+router.put("/:id", async (request, response) => {
   try {
-    if (!request.body.id2) {
+    if (!request.body.prod_id) {
       return response.status(400).send({
-        message: "no id2 found",
+        message: "no id found",
       });
     }
 
-    const { id2 } = request.params;
+    const { id } = request.params;
 
-    const result = await Book.findByIdAndUpdate(id2, request.body);
+    const result = await Product.findByIdAndUpdate(id, request.body);
 
     if (!result) {
       return response.status(404).json({ message: "Book not found" });

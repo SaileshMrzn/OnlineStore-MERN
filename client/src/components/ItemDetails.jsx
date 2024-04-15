@@ -13,8 +13,13 @@ import {
   getCartTotal,
   incrementQuantity,
   decrementQuantity,
-  addCartItemsAndPostData,
 } from "../features/itemSlice";
+import {
+  fetchDatabase,
+  removeFlag,
+  deleteFromDatabase,
+  addCartItemsAndPostData,
+} from "../features/dbSlice";
 import axios from "axios";
 
 export default function ItemDetails() {
