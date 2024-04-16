@@ -12,6 +12,8 @@ import {
   fetchDatabase,
   removeFlag,
   deleteFromDatabase,
+  incrementFromDatabase,
+  decrementFromDatabase,
 } from "../features/dbSlice";
 
 import { AiOutlineDelete } from "react-icons/ai";
@@ -85,7 +87,7 @@ function CartItems() {
                                   class={`border-${border} border rounded-md py-2 px-4 mr-2`}
                                   onClick={() => {
                                     item.totalQuantity > 1
-                                      ? dispatch(decrementQuantity(item))
+                                      ? dispatch(decrementFromDatabase(item))
                                       : alert("Quantity cannot be less than 1");
                                   }}
                                 >
@@ -97,7 +99,7 @@ function CartItems() {
                                 <button
                                   class={`border border-${border} rounded-md py-2 px-4 ml-2`}
                                   onClick={() => {
-                                    dispatch(incrementQuantity(item));
+                                    dispatch(incrementFromDatabase(item));
                                   }}
                                 >
                                   +
