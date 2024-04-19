@@ -14,6 +14,7 @@ import {
   deleteFromDatabase,
   incrementFromDatabase,
   decrementFromDatabase,
+  getDbTotal,
 } from "../features/dbSlice";
 
 import { AiOutlineDelete } from "react-icons/ai";
@@ -23,13 +24,18 @@ import { useParams } from "react-router-dom";
 function CartItems() {
   const theme = useSelector(getThemeState);
   const cartItems = useSelector(getCartItems);
-  const { totalPrice, totalQuantity } = useSelector((state) => state.items);
+  const { totalPrice } = useSelector((state) => state.items);
+  const { finalPrice, finalQuantity, totalQuantity } = useSelector(
+    (state) => state.db
+  );
   const { database, flag } = useSelector((state) => state.db);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchDatabase());
+    // dispatch(getDbTotal(database[0].data));
+    dispatch(getDbTotal());
     return () => {
       dispatch(removeFlag());
     };
@@ -138,11 +144,11 @@ function CartItems() {
                 <h2 class="text-lg font-semibold mb-4">Summary</h2>
                 <div class="flex justify-between mb-2">
                   <span>Total Amount</span>
-                  <span>${totalPrice}</span>
+                  <span>${finalPrice}</span>
                 </div>
                 <div class="flex justify-between mb-2">
                   <span>Total Quantity</span>
-                  <span>{totalQuantity}</span>
+                  <span>{finalQuantity}</span>
                 </div>
                 <div class="flex justify-between mb-2">
                   <span>Shipping</span>
@@ -151,7 +157,7 @@ function CartItems() {
                 <hr class="my-2" />
                 <div class="flex justify-between mb-2">
                   <span class="font-semibold">Total</span>
-                  <span class="font-semibold">${totalPrice}</span>
+                  <span class="font-semibold">${finalPrice}</span>
                 </div>
                 <button class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">
                   Checkout

@@ -30,6 +30,7 @@ export default function ItemDetails() {
   const { totalPrice, totalQuantity, cartItems } = useSelector(
     (state) => state.items
   );
+  const { database } = useSelector((state) => state.db);
 
   const [dataToSend, setDataToSend] = useState(null);
 
@@ -69,7 +70,7 @@ export default function ItemDetails() {
   //       });
   //   }
   // };
-
+  console.log(database);
   const addToCart = () => {
     dispatch(addCartItemsAndPostData(details[0]));
     alert("added to cart");

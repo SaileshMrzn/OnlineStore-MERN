@@ -49,8 +49,6 @@ const itemSlice = createSlice({
 
       if (itemIndex >= 0) {
         state.cartItems[itemIndex].quantity += 1;
-      } else {
-        state.cartItems.push({ ...payload, quantity: 1 });
       }
     },
 
