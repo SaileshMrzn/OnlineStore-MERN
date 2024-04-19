@@ -175,6 +175,9 @@ const dbSlice = createSlice({
       })
       .addCase(decrementFromDatabase.fulfilled, (state, { payload }) => {
         state.flag += 1;
+      })
+      .addCase(addCartItemsAndPostData.fulfilled, (state, { payload }) => {
+        state.flag += 1;
       });
   },
 });
