@@ -50,7 +50,7 @@ function CartItems() {
 
   return (
     <div className={`${background} px-14 py-10`}>
-      <div class="h-screen">
+      <div class="h-* ">
         <div class="container mx-auto px-4">
           <h1 class={`text-2xl font-semibold mb-4 ${textBold}`}>
             Shopping Cart
