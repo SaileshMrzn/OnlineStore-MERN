@@ -1,7 +1,7 @@
-import Navbar from "./components/Navbar";
-import Content from "./components/Content";
-import ItemDetails from "./components/ItemDetails";
-import CartItems from "./components/CartItems";
+import Navbar from "./pages/Navbar";
+import Content from "./pages/Content";
+import ItemDetails from "./pages/ItemDetails";
+import CartItems from "./pages/CartItems";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {

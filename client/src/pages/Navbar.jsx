@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import "../style.css";
 import {
   getAllItems,
-  getThemeState,
   setFilteredItems,
   setThemeState,
 } from "../features/itemSlice";
@@ -17,8 +16,6 @@ export default function Navbar() {
   const dispatch = useDispatch();
   const [term, setTerm] = useState("");
   const items = useSelector(getAllItems);
-  // const database = useSelector(fetchDatabase());
-  // const {} = useSelector((state) => state.items);
   const { database, flag } = useSelector((state) => state.db);
 
   useEffect(() => {
@@ -41,7 +38,6 @@ export default function Navbar() {
   };
 
   const [theme, setTheme] = useLocalStorage("theme", "light");
-  const theme_state = useSelector(getThemeState);
 
   const handleToggle = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -52,8 +48,6 @@ export default function Navbar() {
       ? dispatch(setThemeState(true))
       : dispatch(setThemeState(false));
   }, [theme]);
-
-  // console.log(database);
 
   return (
     <>
