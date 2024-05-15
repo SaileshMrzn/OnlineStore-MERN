@@ -1,5 +1,5 @@
 // ItemDetails.js
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../style.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,34 +9,16 @@ import {
   getLoaderState,
   removeItemDetail,
   getThemeState,
-  addCartItems,
-  getCartTotal,
-  incrementQuantity,
-  decrementQuantity,
 } from "../features/itemSlice";
-import {
-  fetchDatabase,
-  removeFlag,
-  deleteFromDatabase,
-  addCartItemsAndPostData,
-} from "../features/dbSlice";
-import axios from "axios";
+import { addCartItemsAndPostData } from "../features/dbSlice";
 
 export default function ItemDetails() {
   const { id } = useParams();
   const details = useSelector(getAllDetails);
   const loader = useSelector(getLoaderState);
   const theme = useSelector(getThemeState);
-  const { totalPrice, totalQuantity, cartItems } = useSelector(
-    (state) => state.items
-  );
-  const { database } = useSelector((state) => state.db);
-
-  const [dataToSend, setDataToSend] = useState(null);
 
   const dispatch = useDispatch();
-
-  console.log(details);
 
   useEffect(() => {
     dispatch(fetchAsyncItemDetail(id));
@@ -45,32 +27,6 @@ export default function ItemDetails() {
     };
   }, [id]);
 
-  // const addToCart = () => {
-  //   dispatch(addCartItems(details[0]));
-  //   dispatch(getCartTotal());
-  //   alert("added to cart");
-
-  //   console.log(cartItems);
-
-  //   if (cartItems[0]) {
-  //     const updatedData = {
-  //       prod_id: id,
-  //       title: cartItems[0].title,
-  //       totalQuantity: totalQuantity,
-  //       totalPrice: totalPrice,
-  //     };
-
-  //     axios
-  //       .post("http://localhost:5555/product", updatedData)
-  //       .then((response) => {
-  //         console.log("Data posted successfully:", response.data);
-  //       })
-  //       .catch((error) => {
-  //         console.log("Error posting data:", error);
-  //       });
-  //   }
-  // };
-  console.log(database);
   const addToCart = () => {
     dispatch(addCartItemsAndPostData(details[0]));
     alert("added to cart");
