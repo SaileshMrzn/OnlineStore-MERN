@@ -22,7 +22,7 @@ export default function Content() {
         <h2 className={`${textBold} title-font text-center text-xl py-6`}>
           Top Deals
         </h2>
-        <div className="flex flex-wrap justify-center items-center mx-10">
+        <div className="flex flex-wrap items-start mx-10 min-h-screen justify-center">
           <Items />
         </div>
         <Footer />

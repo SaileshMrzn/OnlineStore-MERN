@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getThemeState } from "../features/itemSlice";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchDatabase,
-  removeFlag,
-  deleteFromDatabase,
-  incrementFromDatabase,
   decrementFromDatabase,
+  deleteFromDatabase,
+  fetchDatabase,
   getDbTotal,
+  incrementFromDatabase,
+  removeFlag,
 } from "../features/dbSlice";
+import { getThemeState } from "../features/itemSlice";
+import axios from "axios";
 
 import { AiOutlineDelete } from "react-icons/ai";
 
@@ -32,9 +33,38 @@ function CartItems() {
   const cartbackground = theme === false ? "bg-gray-200" : "bg-gray-700";
   const border = theme === false ? " border-gray-700" : "border-gray-700";
 
+  const handleCheckout = async () => {
+    const payload = {
+      return_url: "http://localhost:5173/paymentSuccess/",
+      website_url: "http://localhost:5173/",
+      amount: 1000,
+      purchase_order_id: "test12",
+      purchase_order_name: "test",
+      customer_info: {
+        name: "Khalti Bahadur",
+        email: "example@gmail.com",
+        phone: "9800000123",
+      },
+    };
+
+    console.log(payload.amount);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5555/payment",
+        payload
+      );
+      console.log(response);
+
+      window.location.href = `${response?.data?.payment_url}`;
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   return (
     <div className={`${background} px-14 py-10`}>
-      <div class="h-* ">
+      <div class="h-screen">
         <div class="container mx-auto px-4">
           <h1 class={`text-2xl font-semibold mb-4 ${textBold}`}>
             Shopping Cart
@@ -139,7 +169,10 @@ function CartItems() {
                   <span class="font-semibold">Total</span>
                   <span class="font-semibold">${finalPrice}</span>
                 </div>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">
+                <button
+                  class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full"
+                  onClick={handleCheckout}
+                >
                   Checkout
                 </button>
               </div>
