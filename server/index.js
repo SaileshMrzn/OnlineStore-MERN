@@ -40,7 +40,7 @@ app.post("/payment", async (req, res) => {
   }
 });
 
-const mongoDBURL = `mongodb+srv://shaileshmrzn:${pw}@onlinestore-2.ph2tdbf.mongodb.net/?retryWrites=true&w=majority&appName=OnlineStore-2`;
+const mongoDBURL = `mongodb+srv://shaileshmrzn:${pw}@onlinestore-2.ph2tdbf.mongodb.net/test?retryWrites=true&w=majority&appName=OnlineStore-2`;
 mongoose
   .connect(mongoDBURL)
   .then(() => {
