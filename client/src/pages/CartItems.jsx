@@ -10,6 +10,7 @@ import {
 } from "../features/dbSlice";
 import { getThemeState } from "../features/itemSlice";
 import axios from "axios";
+import { loadStripe } from "@stripe/stripe-js";
 
 import { AiOutlineDelete } from "react-icons/ai";
 
@@ -33,33 +34,50 @@ function CartItems() {
   const cartbackground = theme === false ? "bg-gray-200" : "bg-gray-700";
   const border = theme === false ? " border-gray-700" : "border-gray-700";
 
-  const handleCheckout = async () => {
-    const payload = {
-      return_url: "http://localhost:5173/paymentSuccess/",
-      website_url: "http://localhost:5173/",
-      amount: 1000,
-      purchase_order_id: "test12",
-      purchase_order_name: "test",
-      customer_info: {
-        name: "Khalti Bahadur",
-        email: "example@gmail.com",
-        phone: "9800000123",
-      },
+  // const handleCheckout = async () => {
+  //   const payload = {
+  //     return_url: "http://localhost:5173/paymentSuccess/",
+  //     website_url: "http://localhost:5173/",
+  //     amount: finalPrice * 100,
+  //     purchase_order_id: "test12",
+  //     purchase_order_name: "test",
+  //     customer_info: {
+  //       name: "Khalti Bahadur",
+  //       email: "example@gmail.com",
+  //       phone: "9800000123",
+  //     },
+  //   };
+
+  //   console.log(payload.amount);
+
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:5555/payment",
+  //       payload
+  //     );
+  //     console.log(response);
+
+  //     window.location.href = `${response?.data?.payment_url}`;
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  // };
+
+  console.log(database[0].data);
+
+  const handleCheckout = () => {
+    const body = {
+      items: database[0].data,
     };
 
-    console.log(payload.amount);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5555/payment",
-        payload
-      );
-      console.log(response);
-
-      window.location.href = `${response?.data?.payment_url}`;
-    } catch (error) {
-      console.error(error.message);
-    }
+    axios
+      .post("http://localhost:5555/paymentStripe", body)
+      .then((response) => {
+        window.location.href = response.data.url;
+      })
+      .catch((error) => {
+        console.error("Error creating checkout session:", error.error || error);
+      });
   };
 
   return (
