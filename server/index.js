@@ -7,14 +7,19 @@ import cors from "cors";
 import axios from "axios";
 
 dotenv.config();
+import Stripe from "stripe";
+const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+
 const port = process.env.PORT;
 const pw = process.env.PASSWORD;
 
 const app = express();
-
 app.use(express.json());
-
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5555"],
+  })
+);
 
 app.listen(port, () => {
   console.log(`App is listening to port ${port}`);
@@ -22,21 +27,45 @@ app.listen(port, () => {
 
 app.use("/product", ProductRoutes);
 
-app.post("/payment", async (req, res) => {
-  const payload = req.body;
+// app.post("/payment", async (req, res) => {
+//   const payload = req.body;
+//   try {
+//     const khaltiResponse = await axios.post(
+//       "https://a.khalti.com/api/v2/epayment/initiate/",
+//       payload,
+//       {
+//         headers: {
+//           Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
+//         },
+//       }
+//     );
+//     res.json(khaltiResponse.data);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// });
+
+app.post("/paymentStripe", async (req, res) => {
   try {
-    const khaltiResponse = await axios.post(
-      "https://a.khalti.com/api/v2/epayment/initiate/",
-      payload,
-      {
-        headers: {
-          Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      success_url: "https://localhost:5173/success",
+      cancel_url: "https://localhost:5173/cancel",
+      line_items: req.body.items.map((item) => ({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.title,
+          },
+          unit_amount: Math.round(item.price * 100),
         },
-      }
-    );
-    res.json(khaltiResponse.data);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+        quantity: item.totalQuantity,
+      })),
+    });
+    res.json({ url: session.url });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 });
 
