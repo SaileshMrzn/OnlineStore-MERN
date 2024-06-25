@@ -68,7 +68,7 @@ function CartItems() {
     };
 
     axios
-      .post("https://localhost:5555/paymentStripe", body)
+      .post("https://onlinestore-mern.onrender.com/paymentStripe", body)
       .then((response) => {
         window.location.href = response.data.url;
       })
