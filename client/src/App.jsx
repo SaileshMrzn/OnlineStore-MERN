@@ -15,8 +15,8 @@ function App() {
           <Route path="/" exact element={<Content />} />
           <Route path="/item/:id" exact element={<ItemDetails />} />
           <Route path="/cartItems" exact element={<CartItems />} />
-          <Route path="/paymentSuccess" exact element={<Success />} />
-          <Route path="/paymentFailed" exact element={<Failed />} />
+          <Route path="/paymentSuccess" element={<Success />} />
+          <Route path="/paymentFailed" element={<Failed />} />
         </Routes>
       </BrowserRouter>
     </>
