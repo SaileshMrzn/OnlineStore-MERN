@@ -17,7 +17,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://onlinestore-mern.onrender.com"],
+    origin: [
+      "https://online-store-mern.vercel.app",
+      "https://onlinestore-mern.onrender.com",
+    ],
   })
 );
 
@@ -50,8 +53,8 @@ app.post("/paymentStripe", async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: "https://localhost:5173/paymentSuccess",
-      cancel_url: "https://localhost:5173/paymentFailed",
+      success_url: "https://online-store-mern.vercel.app/paymentSuccess",
+      cancel_url: "https://online-store-mern.vercel.app/paymentFailed",
       line_items: req.body.items.map((item) => ({
         price_data: {
           currency: "usd",

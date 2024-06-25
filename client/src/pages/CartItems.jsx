@@ -37,8 +37,8 @@ function CartItems() {
 
   const handleKhaltiCheckout = async () => {
     const payload = {
-      return_url: "http://localhost:5173/paymentSuccess/",
-      website_url: "http://localhost:5173/",
+      return_url: "https://online-store-mern.vercel.app/paymentSuccess/",
+      website_url: "https://online-store-mern.vercel.app",
       amount: Math.round(finalPrice * 100),
       purchase_order_id: "test12",
       purchase_order_name: "test",
