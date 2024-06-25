@@ -2,15 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { addCartItems, getCartTotal } from "../features/itemSlice";
 
+const backendURL = "https://onlinestore-mern.onrender.com";
+
 export const fetchDatabase = createAsyncThunk("db/fetchDatabase", async () => {
-  const res = await axios.get(`http://localhost:5555/product`);
+  const res = await axios.get(`${backendURL}/product`);
   return res.data;
 });
 
 export const deleteFromDatabase = createAsyncThunk(
   "db/deleteFromDatabase",
   async (id) => {
-    const res = await axios.delete(`http://localhost:5555/product/${id}`);
+    const res = await axios.delete(`${backendURL}/product/${id}`);
     return res.data;
   }
 );
@@ -31,10 +33,7 @@ export const incrementFromDatabase = createAsyncThunk(
       totalPrice: itemToUpdate.totalPrice,
     };
 
-    const response = await axios.put(
-      `http://localhost:5555/product/${item._id}`,
-      data
-    );
+    const response = await axios.put(`${backendURL}/product/${item._id}`, data);
     console.log("Data updated successfully:", response.data);
 
     await dispatch(fetchDatabase());
@@ -59,10 +58,7 @@ export const decrementFromDatabase = createAsyncThunk(
       totalPrice: itemToUpdate.totalPrice,
     };
 
-    const response = await axios.put(
-      `http://localhost:5555/product/${item._id}`,
-      data
-    );
+    const response = await axios.put(`${backendURL}/product/${item._id}`, data);
     console.log("Data updated successfully:", response.data);
 
     await dispatch(fetchDatabase());
@@ -77,7 +73,6 @@ export const addCartItemsAndPostData = createAsyncThunk(
     await dispatch(fetchDatabase());
 
     const database = getState().db.database[0].data;
-    console.log(database);
 
     const existingItem = database.find((dbItem) => dbItem.prod_id === item.id);
 
@@ -98,15 +93,12 @@ export const addCartItemsAndPostData = createAsyncThunk(
 
     if (existingItem) {
       const response = await axios.put(
-        `http://localhost:5555/product/${existingItem._id}`,
+        `${backendURL}/product/${existingItem._id}`,
         updatedData
       );
       console.log("Data updated successfully:", response.data);
     } else {
-      const response = await axios.post(
-        "http://localhost:5555/product",
-        updatedData
-      );
+      const response = await axios.post(`${backendURL}/product`, updatedData);
       console.log("Data posted successfully:", response.data);
     }
     return updatedData;

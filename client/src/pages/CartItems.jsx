@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   decrementFromDatabase,
@@ -10,14 +10,15 @@ import {
 } from "../features/dbSlice";
 import { getThemeState } from "../features/itemSlice";
 import axios from "axios";
-import { loadStripe } from "@stripe/stripe-js";
-
+import { FaCcStripe } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 
 function CartItems() {
   const theme = useSelector(getThemeState);
   const { finalPrice, finalQuantity } = useSelector((state) => state.db);
   const { database, flag } = useSelector((state) => state.db);
+
+  const [checkoutClick, setCheckoutClick] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -34,44 +35,40 @@ function CartItems() {
   const cartbackground = theme === false ? "bg-gray-200" : "bg-gray-700";
   const border = theme === false ? " border-gray-700" : "border-gray-700";
 
-  // const handleCheckout = async () => {
-  //   const payload = {
-  //     return_url: "http://localhost:5173/paymentSuccess/",
-  //     website_url: "http://localhost:5173/",
-  //     amount: finalPrice * 100,
-  //     purchase_order_id: "test12",
-  //     purchase_order_name: "test",
-  //     customer_info: {
-  //       name: "Khalti Bahadur",
-  //       email: "example@gmail.com",
-  //       phone: "9800000123",
-  //     },
-  //   };
+  const handleKhaltiCheckout = async () => {
+    const payload = {
+      return_url: "http://localhost:5173/paymentSuccess/",
+      website_url: "http://localhost:5173/",
+      amount: Math.round(finalPrice * 100),
+      purchase_order_id: "test12",
+      purchase_order_name: "test",
+      customer_info: {
+        name: "Khalti Bahadur",
+        email: "example@gmail.com",
+        phone: "9800000123",
+      },
+    };
 
-  //   console.log(payload.amount);
+    try {
+      const response = await axios.post(
+        "https://onlinestore-mern.onrender.com/paymentKhalti",
+        payload
+      );
+      console.log(response);
 
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:5555/payment",
-  //       payload
-  //     );
-  //     console.log(response);
+      window.location.href = `${response?.data?.payment_url}`;
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
-  //     window.location.href = `${response?.data?.payment_url}`;
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // };
-
-  console.log(database[0].data);
-
-  const handleCheckout = () => {
+  const handleStripeCheckout = () => {
     const body = {
       items: database[0].data,
     };
 
     axios
-      .post("http://localhost:5555/paymentStripe", body)
+      .post("https://localhost:5555/paymentStripe", body)
       .then((response) => {
         window.location.href = response.data.url;
       })
@@ -82,44 +79,46 @@ function CartItems() {
 
   return (
     <div className={`${background} px-14 py-10`}>
-      <div class="h-screen">
-        <div class="container mx-auto px-4">
-          <h1 class={`text-2xl font-semibold mb-4 ${textBold}`}>
+      <div className="h-screen">
+        <div className="container mx-auto px-4">
+          <h1 className={`text-2xl font-semibold mb-4 ${textBold}`}>
             Shopping Cart
           </h1>
-          <div class="flex flex-col md:flex-row gap-4">
-            <div class="md:w-3/4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4">
               <div
-                class={`${cartbackground} ${textBold} rounded-lg shadow-md p-6 mb-4`}
+                className={`${cartbackground} ${textBold} rounded-lg shadow-md p-6 mb-4`}
               >
-                <table class="w-full">
+                <table className="w-full">
                   <thead>
                     <tr>
-                      <th class="text-left font-semibold">Product</th>
-                      <th class="text-left font-semibold">Price</th>
-                      <th class="text-left font-semibold">Quantity</th>
-                      <th class="text-left font-semibold">Total</th>
+                      <th className="text-left font-semibold">Product</th>
+                      <th className="text-left font-semibold">Price</th>
+                      <th className="text-left font-semibold">Quantity</th>
+                      <th className="text-left font-semibold">Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {database.length !== 0 ? (
                       database[0].data.map((item) => (
                         <tr>
-                          <td class="py-4 max-w-sm">
-                            <div class="flex items-center pr-5">
+                          <td className="py-4 max-w-sm">
+                            <div className="flex items-center pr-5">
                               <img
-                                class="h-16 w-16 mr-4"
+                                className="h-16 w-16 mr-4"
                                 src={item.image}
                                 alt="Product image"
                               />
-                              <span class="font-semibold">{item.title}</span>
+                              <span className="font-semibold">
+                                {item.title}
+                              </span>
                             </div>
                           </td>
-                          <td class="py-4">${item.price}</td>
-                          <td class="py-4">
-                            <div class="flex items-center">
+                          <td className="py-4">${item.price}</td>
+                          <td className="py-4">
+                            <div className="flex items-center">
                               <button
-                                class={`border-${border} border rounded-md py-2 px-4 mr-2`}
+                                className={`border-${border} border rounded-md py-2 px-4 mr-2`}
                                 onClick={() => {
                                   item.totalQuantity > 1
                                     ? dispatch(decrementFromDatabase(item))
@@ -128,11 +127,11 @@ function CartItems() {
                               >
                                 -
                               </button>
-                              <span class="text-center w-8">
+                              <span className="text-center w-8">
                                 {item.totalQuantity}
                               </span>
                               <button
-                                class={`border border-${border} rounded-md py-2 px-4 ml-2`}
+                                className={`border border-${border} rounded-md py-2 px-4 ml-2`}
                                 onClick={() => {
                                   dispatch(incrementFromDatabase(item));
                                 }}
@@ -141,7 +140,7 @@ function CartItems() {
                               </button>
                             </div>
                           </td>
-                          <td class="py-4">
+                          <td className="py-4">
                             $
                             {parseFloat(
                               item.price * item.totalQuantity
@@ -165,35 +164,58 @@ function CartItems() {
                 </table>
               </div>
             </div>
-            <div class="md:w-1/4">
-              <div
-                class={`${cartbackground} ${textBold} rounded-lg shadow-md p-6`}
-              >
-                <h2 class="text-lg font-semibold mb-4">Summary</h2>
-                <div class="flex justify-between mb-2">
-                  <span>Total Amount</span>
-                  <span>${finalPrice}</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                  <span>Total Quantity</span>
-                  <span>{finalQuantity}</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                  <span>Shipping</span>
-                  <span>$0.00</span>
-                </div>
-                <hr class="my-2" />
-                <div class="flex justify-between mb-2">
-                  <span class="font-semibold">Total</span>
-                  <span class="font-semibold">${finalPrice}</span>
-                </div>
-                <button
-                  class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full"
-                  onClick={handleCheckout}
+            <div className="right">
+              <div className="md:w-[175%] relative">
+                <div
+                  className={`${cartbackground} ${textBold} rounded-lg shadow-md p-6 `}
                 >
-                  Checkout
-                </button>
+                  <h2 className="text-lg font-semibold mb-4">Summary</h2>
+                  <div className="flex justify-between mb-2">
+                    <span>Total Amount</span>
+                    <span>${finalPrice}</span>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span>Total Quantity</span>
+                    <span>{finalQuantity}</span>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span>Shipping</span>
+                    <span>$0.00</span>
+                  </div>
+                  <hr className="my-2" />
+                  <div className="flex justify-between mb-2">
+                    <span className="font-semibold">Total</span>
+                    <span className="font-semibold">${finalPrice}</span>
+                  </div>
+                  <button
+                    className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full"
+                    onClick={() => setCheckoutClick(true)}
+                  >
+                    Checkout
+                  </button>
+                </div>
               </div>
+              {checkoutClick && (
+                <div className="payment">
+                  <h1 className={`text-2xl font-semibold mt-4 ${textBold}`}>
+                    Payment Options
+                  </h1>
+                  <div
+                    className={`${cartbackground} ${textBold} rounded-lg shadow-md p-6 mt-4 md:w-[175%] flex justify-around items-center`}
+                  >
+                    <img
+                      src="/icons/khalti2.jpg"
+                      alt=""
+                      className="h-16 w-28 cursor-pointer"
+                      onClick={handleKhaltiCheckout}
+                    />
+                    <FaCcStripe
+                      className="scale-[300%] cursor-pointer"
+                      onClick={handleStripeCheckout}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

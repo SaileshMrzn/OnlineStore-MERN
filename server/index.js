@@ -17,7 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5555"],
+    origin: ["http://localhost:5173", "https://onlinestore-mern.onrender.com"],
   })
 );
 
@@ -27,31 +27,31 @@ app.listen(port, () => {
 
 app.use("/product", ProductRoutes);
 
-// app.post("/payment", async (req, res) => {
-//   const payload = req.body;
-//   try {
-//     const khaltiResponse = await axios.post(
-//       "https://a.khalti.com/api/v2/epayment/initiate/",
-//       payload,
-//       {
-//         headers: {
-//           Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
-//         },
-//       }
-//     );
-//     res.json(khaltiResponse.data);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
+app.post("/paymentKhalti", async (req, res) => {
+  const payload = req.body;
+  try {
+    const khaltiResponse = await axios.post(
+      "https://a.khalti.com/api/v2/epayment/initiate/",
+      payload,
+      {
+        headers: {
+          Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
+        },
+      }
+    );
+    res.json(khaltiResponse.data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 app.post("/paymentStripe", async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: "https://localhost:5173/success",
-      cancel_url: "https://localhost:5173/cancel",
+      success_url: "https://localhost:5173/paymentSuccess",
+      cancel_url: "https://localhost:5173/paymentFailed",
       line_items: req.body.items.map((item) => ({
         price_data: {
           currency: "usd",
