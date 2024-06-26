@@ -24,6 +24,12 @@ app.use(
   })
 );
 
+app.use(express.static(path.join(__dirname, "frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
+});
+
 app.listen(port, () => {
   console.log(`App is listening to port ${port}`);
 });
