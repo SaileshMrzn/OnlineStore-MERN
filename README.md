@@ -11,18 +11,30 @@ Add the following variables inside .env file in the server directory:
   PASSWORD =
 ```
 
-## Live link
+## Demo
+
 https://online-store-mern.vercel.app/
 
-For payment testing:
-(If Khalti is not working, please use stripe)
+## For payment testing:  
+( If khalti is not working please use stripe instead)  
 
-Khalti :
-Test Khalti ID 9800000000 9800000001 9800000002 9800000003 9800000004 9800000005
+Khalti:  
+```bash
+Test Khalti ID 9800000000 9800000001 9800000002 9800000003
 
 Test MPIN 1111
 
 Test OTP 987654
+```
+
+Stripe:
+```bash
+Card information:
+
+Use any number which includes 4 and 2
+
+For example, 4242 4242 4242 4242
+```
 
     
 
