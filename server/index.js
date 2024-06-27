@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-// import { Product } from "./models/ProductModel.js";
 import ProductRoutes from "./routes/ProductRoutes.js";
 import cors from "cors";
 import axios from "axios";
@@ -19,6 +18,7 @@ app.use(
   cors({
     origin: [
       "https://online-store-mern.vercel.app",
+      "http://localhost:5173",
       "https://onlinestore-mern.onrender.com",
     ],
   })
@@ -53,8 +53,8 @@ app.post("/paymentStripe", async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: "",
-      cancel_url: "",
+      success_url: "https://online-store-mern.vercel.app",
+      cancel_url: "https://online-store-mern.vercel.app",
       line_items: req.body.items.map((item) => ({
         price_data: {
           currency: "usd",

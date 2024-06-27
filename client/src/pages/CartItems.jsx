@@ -35,6 +35,8 @@ function CartItems() {
   const cartbackground = theme === false ? "bg-gray-200" : "bg-gray-700";
   const border = theme === false ? " border-gray-700" : "border-gray-700";
 
+  const backendURL = "https://onlinestore-mern.onrender.com";
+
   const handleKhaltiCheckout = async () => {
     const payload = {
       return_url: "https://online-store-mern.vercel.app/paymentSuccess/",
@@ -50,10 +52,7 @@ function CartItems() {
     };
 
     try {
-      const response = await axios.post(
-        "https://onlinestore-mern.onrender.com/paymentKhalti",
-        payload
-      );
+      const response = await axios.post(`${backendURL}/paymentKhalti`, payload);
       console.log(response);
 
       window.location.href = `${response?.data?.payment_url}`;
@@ -68,7 +67,7 @@ function CartItems() {
     };
 
     axios
-      .post("https://onlinestore-mern.onrender.com/paymentStripe", body)
+      .post(`${backendURL}/paymentStripe`, body)
       .then((response) => {
         window.location.href = response.data.url;
       })
