@@ -19,7 +19,6 @@ app.use(
   cors({
     origin: [
       "https://online-store-mern.vercel.app",
-      "http://localhost:5173/",
       "https://onlinestore-mern.onrender.com",
     ],
   })
