@@ -54,8 +54,8 @@ app.post("/paymentStripe", async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      // success_url: "https://online-store-mern.vercel.app/paymentSuccess",
-      // cancel_url: "https://online-store-mern.vercel.app/paymentFailed",
+      success_url: "",
+      cancel_url: "",
       line_items: req.body.items.map((item) => ({
         price_data: {
           currency: "usd",
