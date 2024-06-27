@@ -2,15 +2,6 @@
 
 An ecommerce website using MERN stack.
 
-## Using locally
-
-Add the following variables inside .env file in the server directory:
-
-```bash
-  PORT =
-  PASSWORD =
-```
-
 ## Demo
 
 https://online-store-mern.vercel.app/
