@@ -19,16 +19,11 @@ app.use(
   cors({
     origin: [
       "https://online-store-mern.vercel.app",
+      "http://localhost:5173/",
       "https://onlinestore-mern.onrender.com",
     ],
   })
 );
-
-app.use(express.static(path.join(__dirname, "frontend/build")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
-});
 
 app.listen(port, () => {
   console.log(`App is listening to port ${port}`);
@@ -59,8 +54,8 @@ app.post("/paymentStripe", async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: "https://online-store-mern.vercel.app/paymentSuccess",
-      cancel_url: "https://online-store-mern.vercel.app/paymentFailed",
+      // success_url: "https://online-store-mern.vercel.app/paymentSuccess",
+      // cancel_url: "https://online-store-mern.vercel.app/paymentFailed",
       line_items: req.body.items.map((item) => ({
         price_data: {
           currency: "usd",
